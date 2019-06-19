@@ -7,14 +7,17 @@ function registerNew(req, res) {
 async function registerCreate(req, res) {
     const { email, password } = req.body;
     const user = await UserModel.create({ email, password });
-    req.session.user = user;
-    res.redirect("/dashboard");
+    req.login(user, (error)=> { //passport method
+        if (error) {
+            return next(error);
+        }
+        res.redirect("/dashboard");
+    })
 }
 
 function logout(req, res) {
-    req.session.destroy(() => {
-        res.redirect("/");
-    });
+    req.logout(); //passport method
+    res.redirect("/");
 }
 
 function loginNew(req, res) {

@@ -23,7 +23,7 @@ router.get("/dashboard", authorise, PageController.dashboard);
 
 router.get("/login", authRedirect, AuthenticationController.loginNew);
 
-router.post("/login", celebrate({
+router.post("/login", celebrate({ //when log in, we want to use passport 
     body: {
         email: Joi.string().required(),
         password: Joi.string().required()
