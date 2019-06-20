@@ -12,7 +12,7 @@ router.get("/logout", AuthenticationController.logout);
 
 router.get("/register", authRedirect, AuthenticationController.registerNew);
 
-router.post("/register", celebrate({
+router.post("/register", celebrate({ 
     body: {
         email: Joi.string().required(),
         password: Joi.string().required()
@@ -29,8 +29,8 @@ router.post("/login", celebrate({ //when log in, we want to use passport
         password: Joi.string().required()
     }
 }), passport.authenticate("local", {
-    successRedirect: "/dashboard",
-    failureRedirect: "/login"
-}));
+    failureRedirect: "/login",
+
+}), AuthenticationController.loginCreate);
 
 module.exports = router;
