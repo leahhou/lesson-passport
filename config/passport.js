@@ -1,6 +1,6 @@
 const passport = require("passport");
 const LocalStrategy = require("passport-local"); //naming convention from passport website
-const {Strategy:JwtStrategy, ExtractJwt} = require("passport-jwt");
+const { Strategy: JwtStrategy, ExtractJwt } = require("passport-jwt");
 const UserModel = require("./../database/models/user_model") // passport need to get info from database
 
 passport.serializeUser((user, done)=>{ //when user login, passport grab the user_id(serializeUser); however, the user info still saved at session
@@ -34,7 +34,13 @@ passport.use(new LocalStrategy( // take a configuration object + callback functi
 
 passport.use(new JwtStrategy( 
     {
-        jwtFormRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+        jwtFormRequest: (req)=> {
+            let token = null;
+            if (req&& req.cookies) {
+                token = req.cookies["jwt"];
+            }
+            return token;
+        },
         secretOrKey: process.env.JWT_SECRET,
     },
     async (jwtPayload, done)=> {
@@ -46,4 +52,4 @@ passport.use(new JwtStrategy(
     })
 )
 
-// module.exports = passport;
+module.exports = passport;

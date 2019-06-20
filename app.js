@@ -5,10 +5,13 @@ const expressSession = require("express-session");
 const MongoStore = require('connect-mongo')(expressSession); // this allows our session in our database, instead of memory
 const mongoose = require('mongoose');
 const passport = require("passport");
+const cookieParser = require("cookie-parser");
 const app = express();
 
 app.engine("handlebars", exphbs({defaultLayout: "main"}));
 app.set("view engine", "handlebars");
+
+app.use(cookieParser());
 
 app.use(expressSession({
     secret: process.env.SESSION_SECRET,
