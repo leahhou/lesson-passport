@@ -1,6 +1,7 @@
 const passport = require("passport");
 const LocalStrategy = require("passport-local"); //naming convention from passport website
 const { Strategy: JwtStrategy, ExtractJwt } = require("passport-jwt");
+const { Strategy: GoogleStrategy } =require("passport-google-oauth20");
 const UserModel = require("./../database/models/user_model") // passport need to get info from database
 
 passport.serializeUser((user, done)=>{ //when user login, passport grab the user_id(serializeUser); however, the user info still saved at session
@@ -52,5 +53,25 @@ passport.use(new JwtStrategy(
         return done(null, false);
     })
 )
+
+passport.use(new GoogleStrategy(
+    {
+       clientID: process.env.GOOGLE_CLIENT_ID,
+       clientSecret: process.env.GOOGLE_SECRET,
+       callbackURL: "http://localhost:3000/auth/google"
+    },
+    async (accessToken, refreshToken, profile, done) => {
+         const email = profile.emails[0].value;
+         const user = await UserModel.findOne({ email });
+
+         if(user) {
+            return done(null, user);
+        }
+        user = await UserModel.create({email, password: "Testing"});
+        
+        return done(null, false);
+    }
+
+));
 
 module.exports = passport;

@@ -33,4 +33,10 @@ router.post("/login", celebrate({ //when log in, we want to use passport
 
 }), AuthenticationController.loginCreate);
 
+//the route we send the request to google
+router.get("/auth/googlelogin", passport.authenticate("google", {scoopt: ["email","profile"]}));
+
+//the route where google come back to us
+router.get("/auth/google",passport.authenticate("google"), AuthenticationController.loginCreate);
+
 module.exports = router;
