@@ -32,7 +32,7 @@ passport.use(new LocalStrategy( // take a configuration object + callback functi
      }
 )); 
 
-passport.use(new JwtStrategy)(
+passport.use(new JwtStrategy( 
     {
         jwtFormRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
         secretOrKey: process.env.JWT_SECRET,
@@ -43,7 +43,7 @@ passport.use(new JwtStrategy)(
             return done(null, user);
         }
         return done(null, false);
-    }
+    })
 )
 
-module.exports = passport;
+// module.exports = passport;
