@@ -16,8 +16,9 @@ passport.deserializeUser(async (id, done)=>{ //once user login & wanna go other 
     }
 });
 
-passport.use(new LocalStrategy( // take a configuration object + callback function 
-     {usernameField:"email"},
+passport.use(new LocalStrategy({// take a configuration object + callback function 
+        usernameField:"email"
+    },
      async (email,password,done) => { // the way how we authenticate the user
         try {
             const user = await UserModel.findOne({email});
@@ -26,7 +27,7 @@ passport.use(new LocalStrategy( // take a configuration object + callback functi
             }
             return done(null, false); // null on both case means no error
         } catch(error) {
-            done(error); // error path, done behave like next that when pass on an error, it will go down the error path (which is next error);
+            return done(error); // error path, done behave like next that when pass on an error, it will go down the error path (which is next error);
         }
 
      }
@@ -34,14 +35,14 @@ passport.use(new LocalStrategy( // take a configuration object + callback functi
 
 passport.use(new JwtStrategy( 
     {
-        jwtFormRequest: (req)=> {
+        jwtFromRequest: (req)=> {
             let token = null;
-            if (req&& req.cookies) {
+            if (req && req.cookies) {
                 token = req.cookies["jwt"];
             }
             return token;
         },
-        secretOrKey: process.env.JWT_SECRET,
+        secretOrKey: process.env.JWT_SECRET
     },
     async (jwtPayload, done)=> {
         const user = await UserModel.findById(jwtPayload.sub).catch(done);
