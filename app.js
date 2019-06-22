@@ -7,7 +7,7 @@ const mongoose = require('mongoose');
 const cookieParser = require("cookie-parser");
 const app = express();
 
-app.engine("handlebars", exphbs({defaultLayout: "main"}));
+app.engine("handlebars", exphbs({extname: "hbs", defaultLayout: "main"}));
 app.set("view engine", "handlebars");
 
 app.use(cookieParser());
